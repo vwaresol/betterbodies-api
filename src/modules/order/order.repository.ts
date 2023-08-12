@@ -80,7 +80,6 @@ export class OrderRepository extends Repository<OrderEntity> {
     { status, search, column, sort }: OrderFilterDto,
     paginationOpts: IPaginationOptions,
   ): Promise<Pagination<OrderEntity>> {
-    
     const query = this.createQueryBuilder('order')
       .innerJoinAndSelect('order.user', 'user')
       .leftJoinAndSelect('order.status', 'status')
@@ -102,7 +101,6 @@ export class OrderRepository extends Repository<OrderEntity> {
     }
 
     try {
-      
       return await paginate(query, paginationOpts);
     } catch (error) {
       console.log('Despues del error');
@@ -218,5 +216,4 @@ export class OrderRepository extends Repository<OrderEntity> {
       user,
     });
   }
-  
 }

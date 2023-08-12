@@ -116,14 +116,6 @@ export class OrderService {
       throw new ConflictException(JSON.stringify(response));
     }
 
-    // si es error regresar un 409 con json stringify que contenga el id de la orden
-
-    // console.log('Payment', paymentData);
-    // console.log('ordern guardada',orderSaved);
-    // agregar validacion en caso de que falle el pago, lanzar error y actualizar status de orden
-    // si el pago es exitoso, guardar id de pago en orden generada
-    // regresar orden actualizada
-
     return orderSaved;
   }
 
@@ -232,7 +224,7 @@ export class OrderService {
       ) / 100;
     order.taxes = Math.ceil((order.total - order.subTotal) * 100) / 100;
     if (order.addressId === null || order.total < 1000) {
-      order.addressId = null;
+      // order.addressId = null;
       order.picked = true;
     }
 

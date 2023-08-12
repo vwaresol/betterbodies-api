@@ -9,6 +9,9 @@ import { CategoryEntity } from './category/category.entity';
 import { CategoryController } from './category/category.controller';
 import { CategoryService } from './category/category.service';
 import { CategoryRepository } from './category/cateogory.repository';
+import { PhotoService } from '../photo/photo.service';
+import { PhotoRepository } from '../photo/photo.repository';
+import { ImageService } from 'src/common/image/image.service';
 
 @Module({
   imports: [
@@ -21,6 +24,9 @@ import { CategoryRepository } from './category/cateogory.repository';
     ProductRepository,
     CategoryService,
     CategoryRepository,
+    PhotoService,
+    PhotoRepository,
+    ImageService,
   ],
   exports: [],
 })

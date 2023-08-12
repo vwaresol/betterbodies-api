@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { AbstractEntity } from 'src/common/entities/abstract-entity';
 import { ProductEntity } from '../product/product.entity';
 
@@ -20,6 +14,5 @@ export class PhotoEntity extends AbstractEntity {
   main: boolean;
 
   @ManyToOne(() => ProductEntity, (product) => product.photos)
-  @JoinColumn()
-  product: ProductEntity[];
+  product: ProductEntity;
 }
