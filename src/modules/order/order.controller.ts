@@ -47,7 +47,7 @@ export class OrderController {
       route: this.configService.get('HOST'),
     });
   }
- 
+
   @Get('/get-orders-by-delivery-man/:delivery_man_id?')
   getOrderByDeliveryMan(
     @GetUser() user: UserEntity,

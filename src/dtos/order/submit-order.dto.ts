@@ -1,7 +1,6 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDateString,
   IsDefined,
   IsEnum,
   IsNotEmpty,
@@ -17,7 +16,6 @@ export class SubmitOrderDto {
   @IsOptional()
   @IsString()
   addressId: string;
-
 
   @IsOptional()
   @IsNotEmpty()

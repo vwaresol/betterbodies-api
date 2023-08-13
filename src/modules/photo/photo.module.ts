@@ -7,6 +7,7 @@ import { PhotoController } from './photo.controller';
 import { PhotoEntity } from './photo.entity';
 import { PhotoRepository } from './photo.repository';
 import { PhotoService } from './photo.service';
+import { ProductService } from '../product/product.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PhotoEntity])],
@@ -17,6 +18,8 @@ import { PhotoService } from './photo.service';
     ImageService,
     ProductRepository,
     CategoryRepository,
+    ProductRepository,
+    ProductService,
   ],
 })
 export class PhotoModule {}

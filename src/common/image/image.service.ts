@@ -57,7 +57,7 @@ export class ImageService implements ImageServiceInterface<any> {
   private unlinkImage(path: string): void {
     fs.unlink(path, (error) => {
       if (error) {
-        throw new ConflictException('Error unlinking file');
+        //throw new ConflictException('Error unlinking file');
       }
     });
   }

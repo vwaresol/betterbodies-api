@@ -1,12 +1,5 @@
 import { AbstractEntity } from 'src/common/entities/abstract-entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { OrderDetailEntity } from '../order/order-detail/order-detail.entity';
 import { PhotoEntity } from '../photo/photo.entity';
 import { CategoryEntity } from './category/category.entity';
@@ -55,6 +48,5 @@ export class ProductEntity extends AbstractEntity {
   orderDetails: OrderDetailEntity[];
 
   @OneToMany(() => PhotoEntity, (photo) => photo.product)
-  @JoinColumn()
   photos: PhotoEntity[];
 }
