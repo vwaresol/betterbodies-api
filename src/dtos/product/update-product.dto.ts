@@ -1,4 +1,10 @@
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class UpdateProductDto {
   @IsNotEmpty()
@@ -20,8 +26,8 @@ export class UpdateProductDto {
   price: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  sale_price: number;
+  @IsOptional()
+  salePrice: number;
 
   @IsNotEmpty()
   @IsNumber()

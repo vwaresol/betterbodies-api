@@ -1,13 +1,7 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { photoErrorsConst } from 'src/const/photo.const';
 import { productErrorsConst } from 'src/const/product.const';
 import { DeletePhotoDto } from 'src/dtos/photo/delete-photo.dto';
-import { SavePhotoDto } from 'src/dtos/photo/save-photo.dto';
-import { SavePhotosDto } from 'src/dtos/photo/save-photos.dto';
 import { DataSource, Repository } from 'typeorm';
 import { ProductEntity } from '../product/product.entity';
 import { ProductRepository } from '../product/product.repository';
@@ -32,20 +26,21 @@ export class PhotoRepository extends Repository<PhotoEntity> {
     return photo;
   }
 
-  async savePhotos(files): Promise<PhotoEntity[]> {
-    const photo = [];
+  async savePhotos(files, product: ProductEntity): Promise<PhotoEntity[]> {
+    const photos = [];
 
-    files.forEach((file) => {
-      photo.push(
-        this.create({
-          name: file.filename,
-        }),
-      );
-    });
+    for (const file of files) {
+      const photo = this.create({
+        name: file.filename,
+        product: product,
+      });
 
-    await this.save(photo);
+      photos.push(photo);
+    }
 
-    return photo;
+    await this.save(photos);
+
+    return photos;
   }
 
   async getPhoto(deletePhotoDto: DeletePhotoDto): Promise<PhotoEntity> {
@@ -53,7 +48,7 @@ export class PhotoRepository extends Repository<PhotoEntity> {
       where: {
         id: deletePhotoDto.photoId,
       },
-     // relations: ['product'],
+      // relations: ['product'],
     });
 
     if (!photo) {

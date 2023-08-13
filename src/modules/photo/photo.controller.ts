@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -14,8 +13,6 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { PhotoService } from './photo.service';
 import { diskStorage } from 'multer';
 import { editFileName, imageFileFilter } from 'src/utils/file-uploading.utils';
-import { SavePhotoDto } from 'src/dtos/photo/save-photo.dto';
-//import { SavePhotosDto } from 'src/dtos/photo/save-photos.dto';
 import { DeletePhotoDto } from 'src/dtos/photo/delete-photo.dto';
 
 @Controller('photo')
@@ -36,7 +33,7 @@ export class PhotoController {
     return this.photoService.savePhoto(file);
   }
 
-  @Post('multiple')
+  @Post('/:productId/multiple')
   @UseInterceptors(
     FilesInterceptor('image', 20, {
       storage: diskStorage({
@@ -46,8 +43,11 @@ export class PhotoController {
       fileFilter: imageFileFilter,
     }),
   )
-  async uploadPhotos(@UploadedFiles() files): Promise<any> {
-    return this.photoService.savePhotos(files);
+  async uploadPhotos(
+    @UploadedFiles() files,
+    @Param('productId') productId: string,
+  ): Promise<any> {
+    return this.photoService.savePhotos(files, productId);
   }
 
   @Get(':photo')

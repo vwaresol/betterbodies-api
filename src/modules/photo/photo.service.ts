@@ -3,10 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ImageService } from 'src/common/image/image.service';
 import { photoErrorsConst } from 'src/const/photo.const';
 import { DeletePhotoDto } from 'src/dtos/photo/delete-photo.dto';
-import { SavePhotoDto } from 'src/dtos/photo/save-photo.dto';
-import { SavePhotosDto } from 'src/dtos/photo/save-photos.dto';
 import { PhotoServiceInterface } from 'src/interfaces/photo/photo-service.interface';
 import { PhotoRepository } from './photo.repository';
+import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class PhotoService implements PhotoServiceInterface {
@@ -14,6 +13,7 @@ export class PhotoService implements PhotoServiceInterface {
     @InjectRepository(PhotoRepository)
     private photoRepository: PhotoRepository,
     private readonly imagesService: ImageService,
+    private readonly productService: ProductService,
   ) {}
 
   async savePhoto(file): Promise<any> {
@@ -23,7 +23,9 @@ export class PhotoService implements PhotoServiceInterface {
     return this.photoRepository.savePhoto(file);
   }
 
-  async savePhotos(files): Promise<any> {
+  async savePhotos(files, productId): Promise<any> {
+    const product = await this.productService.getProductById(productId);
+
     files.forEach((file, i) => {
       setTimeout(async () => {
         await this.imagesService.createThumbnail(file);
@@ -31,7 +33,7 @@ export class PhotoService implements PhotoServiceInterface {
       }, i * 3000);
     });
 
-    return this.photoRepository.savePhotos(files);
+    return this.photoRepository.savePhotos(files, product);
   }
 
   async getPhoto(file: string, thumbnail = ''): Promise<string> {

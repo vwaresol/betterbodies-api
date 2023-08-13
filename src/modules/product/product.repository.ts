@@ -63,7 +63,7 @@ export class ProductRepository extends Repository<ProductEntity> {
     product.sku = data.sku;
     product.barcode = data.barcode;
     product.price = data.price;
-    product.salePrice = data.sale_price;
+    product.salePrice = data.price;
     product.quantity = data.quantity;
     product.categories = categories;
     this.save(product);
