@@ -1,4 +1,10 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { refreshTokenConst } from 'src/const/refresh-token.const';
 import { AuthCredentialsDto } from 'src/dtos/auth/auth-credentials.dto';
 import { SignupDto } from 'src/dtos/auth/sign-up.dto';
@@ -36,6 +42,11 @@ export class AuthService implements AuthServiceInterface {
     password,
   }: AuthCredentialsDto): Promise<JwtPayload> {
     const user = await this.userService.findForUsername(username);
+
+    if (user.password === '0') {
+      throw new ConflictException(authErrorsConst.ERROR_PASSWORD_NOT_FOUND);
+    }
+
     const valid = user ? await bcrypt.compare(password, user.password) : false;
 
     if (!valid) throw new UnauthorizedException(authErrorsConst.ERROR_LOGIN);

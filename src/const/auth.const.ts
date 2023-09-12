@@ -5,4 +5,5 @@ export const authConst = {
 
 export const authErrorsConst = {
   ERROR_LOGIN: 'Please check your login credentials',
+  ERROR_PASSWORD_NOT_FOUND: 'You need to reset password',
 };
