@@ -11,6 +11,7 @@ import {
   OneToOne,
 } from 'typeorm';
 import { RoleEntity } from '../role/role.entity';
+import { ResetPasswordEntity } from '../reset-password/reset-password.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends AbstractEntity {
@@ -41,4 +42,7 @@ export class UserEntity extends AbstractEntity {
 
   @OneToMany(() => OrderCommentEntity, (comment) => comment.user)
   OrderComments: OrderCommentEntity[];
+
+  @OneToMany(() => ResetPasswordEntity, (resets) => resets.user)
+  resets: ResetPasswordEntity[];
 }

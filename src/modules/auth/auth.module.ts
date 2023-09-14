@@ -19,6 +19,10 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { authConst } from 'src/const/auth.const';
+import { ResetPasswordRepository } from './reset-password/reset-password.repository';
+import { ResetPasswordService } from './reset-password/reset-password.service';
+import { ResetPasswordEntity } from './reset-password/reset-password.entity';
+import { MailModule } from 'src/providers/mail/mail.module';
 
 @Module({
   imports: [
@@ -38,7 +42,9 @@ import { authConst } from 'src/const/auth.const';
       RoleEntity,
       UserProfileEntity,
       RefreshTokenEntity,
+      ResetPasswordEntity,
     ]),
+    MailModule,
   ],
   controllers: [AuthController, UserController],
   providers: [
@@ -52,6 +58,9 @@ import { authConst } from 'src/const/auth.const';
     UserProfileRepository,
     RefreskTokenService,
     RefreshTokenRepository,
+    ResetPasswordService,
+    ResetPasswordRepository,
+    // MailService,
   ],
   exports: [UserService, JwtStrategy],
 })
