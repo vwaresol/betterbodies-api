@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@nestjs-modules/mailer": "^1.9.1",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
