@@ -35,7 +35,7 @@ export class ProductEntity extends AbstractEntity {
   @Column({ width: 5 })
   quantity: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 1 })
   isActive: boolean;
 
   @ManyToMany(() => CategoryEntity, (category) => category.id, {
