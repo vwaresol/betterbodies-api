@@ -13,8 +13,7 @@ import { AddressEntity } from '../user-profile/address/address.entity';
 import { OrderCommentEntity } from './order-comment/order-comment.entity';
 import { OrderDetailEntity } from './order-detail/order-detail.entity';
 import { OrderStatusEntity } from './order-status/order-status.entity';
-import { PaymentMethodEnum } from 'src/enums/payment.enum';
-import { PhoneEntity } from '../user-profile/phone/phone.entity';
+
 @Entity({ name: 'order' })
 export class OrderEntity extends AbstractEntity {
   @Generated('increment')
@@ -37,6 +36,15 @@ export class OrderEntity extends AbstractEntity {
 
   @Column({ default: false })
   picked: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  trackingNumber: string;
+
+  @Column({ type: 'text', nullable: true })
+  trackingName: string;
+
+  @Column({ type: 'date', nullable: true })
+  trackingDate: Date;
 
   @ManyToOne(() => OrderStatusEntity, (status) => status.orders)
   @JoinColumn()
@@ -67,9 +75,8 @@ export class OrderEntity extends AbstractEntity {
   })
   comments: OrderCommentEntity[];
 
-  @OneToMany(() => PaymentEntity, (payment) => payment.order,{
-    cascade: true
+  @OneToMany(() => PaymentEntity, (payment) => payment.order, {
+    cascade: true,
   })
   payments: PaymentEntity[];
-  
 }
