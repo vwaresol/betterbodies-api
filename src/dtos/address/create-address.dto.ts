@@ -43,4 +43,7 @@ export class CreateAddressDto {
 
   @IsBoolean()
   main: boolean;
+
+  @IsBoolean()
+  billingAddress: boolean;
 }

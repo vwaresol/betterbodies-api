@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { addressErrorsConst } from 'src/const/address.const';
 import { columnsSort, orderErrorsConst } from 'src/const/order.const';
 import { SubmitOrderDto } from 'src/dtos/order/submit-order.dto';
 import { OrderStatusEnum } from 'src/enums/order-status.enum';
@@ -31,7 +30,6 @@ import { ItemCartDto } from 'src/dtos/order/item-cart.dto';
 import { OrderDetailEntity } from './order-detail/order-detail.entity';
 import { OrderDetailRepository } from './order-detail/order-detail.repository';
 import { ProductRepository } from '../product/product.repository';
-import { PaymentEntity } from './payment/payment.entity';
 
 @Injectable()
 export class OrderRepository extends Repository<OrderEntity> {
@@ -114,7 +112,13 @@ export class OrderRepository extends Repository<OrderEntity> {
 
   async changeOrderStatus(
     id: string,
-    { statusId, comment }: ChangeOrderStatusDto,
+    {
+      status_id,
+      comment,
+      trackingDate,
+      trackingName,
+      trackingNumber,
+    }: ChangeOrderStatusDto,
     user: UserEntity,
   ): Promise<OrderEntity> {
     const order = await this.findOne({ where: { id } }).catch((error) => {
@@ -122,7 +126,7 @@ export class OrderRepository extends Repository<OrderEntity> {
     });
     const status = await this.orderStatusRespository
       .findOne({
-        where: { id: statusId },
+        where: { id: status_id },
       })
       .catch((error) => {
         throw new ConflictException(error.originalError);
@@ -133,6 +137,12 @@ export class OrderRepository extends Repository<OrderEntity> {
       (!comment || comment.length === 0)
     ) {
       throw new ConflictException(orderErrorsConst.ERROR_EMPTY_COMMENT);
+    }
+
+    if (status.status === OrderStatusEnum.ON_TRANSIT) {
+      order.trackingDate = trackingDate;
+      order.trackingName = trackingName;
+      order.trackingNumber = trackingNumber;
     }
 
     const orderComment = this.createOrderComment(comment, user);
