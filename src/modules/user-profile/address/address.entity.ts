@@ -34,6 +34,9 @@ export class AddressEntity extends AbstractEntity {
   @Column({ default: true })
   main: boolean;
 
+  @Column({ default: false })
+  billingAddress: boolean;
+
   @ManyToOne(() => UserProfileEntity, (userProfile) => userProfile.address)
   @JoinColumn()
   userProfile: UserProfileEntity;

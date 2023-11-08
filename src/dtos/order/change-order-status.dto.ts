@@ -1,4 +1,5 @@
 import {
+  IsDateString,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -10,7 +11,19 @@ export class ChangeOrderStatusDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(36)
-  statusId: string;
+  status_id: string;
+
+  @IsOptional()
+  @IsString()
+  trackingName: string;
+
+  @IsOptional()
+  @IsString()
+  trackingNumber: string;
+
+  @IsOptional()
+  @IsDateString()
+  trackingDate: Date;
 
   @IsOptional()
   @IsString()

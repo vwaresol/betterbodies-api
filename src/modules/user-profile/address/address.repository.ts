@@ -34,9 +34,11 @@ export class AddressRepository extends Repository<AddressEntity> {
 
     if (address.main) await this.removeMain(userProfile);
 
+    if (address.billingAddress) await this.removeBillingAddress(userProfile);
+
     try {
       await this.save(address);
-      return await this.find({where: {userProfile:{id:userProfileId}}});
+      return await this.find({ where: { userProfile: { id: userProfileId } } });
     } catch (error) {
       console.log(error);
       if (error.code === '23505') {
@@ -62,5 +64,11 @@ export class AddressRepository extends Repository<AddressEntity> {
 
   private async removeMain(userProfile: UserProfileEntity): Promise<void> {
     await this.update({ userProfile }, { main: false });
+  }
+
+  private async removeBillingAddress(
+    userProfile: UserProfileEntity,
+  ): Promise<void> {
+    await this.update({ userProfile }, { billingAddress: false });
   }
 }
