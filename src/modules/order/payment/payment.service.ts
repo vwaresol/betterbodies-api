@@ -226,7 +226,7 @@ export class PaymentService implements PaymentServiceInterface {
             }
           } else {
             data = [
-              response.getTransactionResponse().getTransId(),
+              0,
               response
                 .getTransactionResponse()
                 .getErrors()
@@ -234,6 +234,8 @@ export class PaymentService implements PaymentServiceInterface {
                 .getErrorCode(),
               response.getTransactionResponse().getResponseCode(),
             ];
+
+            console.log('error', data);
 
             return resolve(data);
           }
