@@ -189,6 +189,8 @@ export class PaymentService implements PaymentServiceInterface {
           APIResponse,
         );
 
+        console.log('response', response);
+
         if (response != null) {
           if (
             response.getMessages().getResultCode() ==
