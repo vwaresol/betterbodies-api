@@ -174,8 +174,7 @@ export class PaymentService implements PaymentServiceInterface {
     createRequest.setMerchantAuthentication(merchantAuthenticationType);
     createRequest.setTransactionRequest(transactionRequestType);
 
-    //pretty print request
-    // console.log(JSON.stringify(createRequest.getJSON(), null, 2));
+    console.log('REQUEST', JSON.stringify(createRequest.getJSON(), null, 2));
 
     const ctrl = new APIControllers.CreateTransactionController(
       createRequest.getJSON(),
@@ -189,7 +188,9 @@ export class PaymentService implements PaymentServiceInterface {
           APIResponse,
         );
 
-        console.log('response', response);
+        
+        console.log('RESPPONSE', JSON.stringify(response, null, 4));
+
 
         if (response != null) {
           if (
