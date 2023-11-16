@@ -127,13 +127,15 @@ export class PaymentService implements PaymentServiceInterface {
     for (const { product, ...details } of order.orderDetails) {
       const lineItemId = new APIContracts.LineItemType();
       const partes = product.id.split('-');
+      const descriptionProduct = product.description;
+      const descriptionLimit = descriptionProduct.substring(0, 39);
       if (product.name.length > 31) {
         lineItemId.setName(product.name.substring(0, 31));
       } else {
         lineItemId.setName(product.name);
       }
       lineItemId.setItemId(partes[4]);
-      lineItemId.setDescription(product.description);
+      lineItemId.setDescription(descriptionLimit);
       lineItemId.setQuantity(details.quantity.toString());
       lineItemId.setUnitPrice(Number(details.salePrice));
       lineItemList.push(lineItemId);
@@ -174,9 +176,6 @@ export class PaymentService implements PaymentServiceInterface {
     createRequest.setMerchantAuthentication(merchantAuthenticationType);
     createRequest.setTransactionRequest(transactionRequestType);
 
-    //pretty print request
-    // console.log(JSON.stringify(createRequest.getJSON(), null, 2));
-
     const ctrl = new APIControllers.CreateTransactionController(
       createRequest.getJSON(),
     );
@@ -195,7 +194,6 @@ export class PaymentService implements PaymentServiceInterface {
             APIContracts.MessageTypeEnum.OK
           ) {
             if (response.getTransactionResponse().getMessages() != null) {
-              //console.log('response', response);
               data = [
                 response.getTransactionResponse().getTransId(),
                 response
@@ -224,7 +222,7 @@ export class PaymentService implements PaymentServiceInterface {
             }
           } else {
             data = [
-              response.getTransactionResponse().getTransId(),
+              0,
               response
                 .getTransactionResponse()
                 .getErrors()
