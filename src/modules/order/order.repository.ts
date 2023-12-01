@@ -226,4 +226,8 @@ export class OrderRepository extends Repository<OrderEntity> {
       user,
     });
   }
+
+  async getStatus(): Promise<OrderStatusEntity[]> {
+    return await this.orderStatusRespository.find({ order: { order: 'ASC' } });
+  }
 }

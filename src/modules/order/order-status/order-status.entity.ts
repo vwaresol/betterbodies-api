@@ -21,6 +21,9 @@ export class OrderStatusEntity {
   })
   status: OrderStatusEnum;
 
+  @Column({ nullable: true })
+  order: number;
+
   @OneToMany(() => OrderEntity, (order) => order.status)
   orders: OrderEntity[];
 
