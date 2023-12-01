@@ -231,6 +231,8 @@ export class PaymentService implements PaymentServiceInterface {
               response.getTransactionResponse().getResponseCode(),
             ];
 
+            console.log('error', data);
+
             return resolve(data);
           }
         }

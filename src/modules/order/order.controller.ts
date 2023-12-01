@@ -25,6 +25,7 @@ import { SubmitOrderDto } from 'src/dtos/order/submit-order.dto';
 import { AssignDeliveryManDto } from 'src/dtos/order/assign-delivery-man.dto';
 import { ChangeOrderStatusDto } from 'src/dtos/order/change-order-status.dto';
 import { UpdatePaymentDto } from 'src/dtos/order/order-update-payment.dto';
+import { OrderStatusEntity } from './order-status/order-status.entity';
 
 @UseGuards(JwtAuthGuard)
 @Controller('order')
@@ -46,6 +47,11 @@ export class OrderController {
       limit,
       route: this.configService.get('HOST'),
     });
+  }
+
+  @Get('/status')
+  getStatus(): Promise<OrderStatusEntity[]> {
+    return this.orderService.getStatus();
   }
 
   @Get('/get-orders-by-delivery-man/:delivery_man_id?')
