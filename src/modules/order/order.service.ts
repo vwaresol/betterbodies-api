@@ -21,6 +21,7 @@ import { ItemCartDto } from 'src/dtos/order/item-cart.dto';
 import { PaymentService } from './payment/payment.service';
 import { PaymentMethodEnum } from 'src/enums/payment.enum';
 import { UpdatePaymentDto } from 'src/dtos/order/order-update-payment.dto';
+import { OrderStatusEntity } from './order-status/order-status.entity';
 
 @Injectable()
 export class OrderService {
@@ -249,4 +250,8 @@ export class OrderService {
   //     cart: orderPreProcessed.cart,
   //   };
   // }
+
+  getStatus(): Promise<OrderStatusEntity[]> {
+    return this.orderRepository.getStatus();
+  }
 }
