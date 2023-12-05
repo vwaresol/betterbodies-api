@@ -75,6 +75,7 @@ export class UserRepository extends Repository<UserEntity> {
   ): Promise<Pagination<UserEntity>> {
     const query = this.createQueryBuilder('user')
       .innerJoinAndSelect('user.userProfile', 'userProfile')
+      .leftJoinAndSelect('userProfile.phone', 'phone')
       .innerJoinAndSelect('user.role', 'role')
       .where({});
 
