@@ -56,6 +56,7 @@ export class OrderService {
             payments: 'order.payments',
           },
         },
+        withDeleted: true,
       })
       .catch((error) => {
         throw new ConflictException(error.originalError);
