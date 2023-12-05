@@ -32,7 +32,6 @@ export class SignupDto {
   lastName: string;
 
   @IsString()
-  @MinLength(3)
   @MaxLength(50)
   @IsOptional()
   motherLastName?: string;
