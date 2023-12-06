@@ -14,7 +14,7 @@ export class UserProfileService implements UserProfileServiceInterface {
   async getProfile(id: string): Promise<UserProfileEntity> {
     return await this.userInfoRepository.findOne({
       where: { id },
-      relations: ['address', 'phone','user'],
+      relations: ['address', 'phone', 'user'],
     });
   }
 }
