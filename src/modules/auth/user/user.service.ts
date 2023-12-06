@@ -33,7 +33,7 @@ export class UserService implements UserServiceInterface {
     const user = await this.userRepository
       .findOne({
         where: { id },
-        relations: ['role', 'userProfile'],
+        relations: ['role', 'userProfile', 'userProfile.address'],
       })
       .catch((error) => {
         throw new ConflictException(error.message);
