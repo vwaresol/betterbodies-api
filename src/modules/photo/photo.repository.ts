@@ -29,9 +29,9 @@ export class PhotoRepository extends Repository<PhotoEntity> {
   async savePhotos(files, product: ProductEntity): Promise<PhotoEntity[]> {
     const photos = [];
 
-    for (const file of files) {
+    for (const file of files.photos) {
       const photo = this.create({
-        name: file.filename,
+        name: file.fileName,
         product: product,
       });
 

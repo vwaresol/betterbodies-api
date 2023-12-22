@@ -26,13 +26,6 @@ export class PhotoService implements PhotoServiceInterface {
   async savePhotos(files, productId): Promise<any> {
     const product = await this.productService.getProductById(productId);
 
-    files.forEach((file, i) => {
-      setTimeout(async () => {
-        await this.imagesService.createThumbnail(file);
-        await this.imagesService.createImage(file);
-      }, i * 3000);
-    });
-
     return this.photoRepository.savePhotos(files, product);
   }
 
