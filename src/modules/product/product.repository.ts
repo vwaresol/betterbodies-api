@@ -91,7 +91,6 @@ export class ProductRepository extends Repository<ProductEntity> {
       );
     }
 
-    // console.log(query.getSql());
     if (column && sort) {
       query.orderBy(sortColumns[column], sort);
     }

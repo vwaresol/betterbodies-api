@@ -31,20 +31,17 @@ export class ProductController {
   @Get()
   get(
     @Query() productFilterDto: ProductFilterDto,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Query('page') page: string,
+    @Query('limit') limit: string,
   ): Promise<Pagination<ProductEntity>> {
-    limit = limit > 50 ? 50 : limit;
+    limit = !limit ? '80' : limit;
     return this.productService.get(productFilterDto, {
       page,
       limit,
       route: this.configService.get('HOST'),
     });
   }
-  // @Get('/search')
-  // async search(@Query() queryParams: SearchProductDto): Promise<any> {
-  //   return await this.productService.search(queryParams);
-  // }
+
   @Get(':id')
   getProductById(@Param('id') id: string): Promise<ProductEntity> {
     return this.productService.getProductById(id);

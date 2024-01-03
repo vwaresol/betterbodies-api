@@ -1,12 +1,10 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailService {
   constructor(
     private mailerService: MailerService,
-    private configService: ConfigService,
   ) {}
 
   resetPassword(token: string, email: string) {
@@ -21,11 +19,11 @@ export class MailService {
       .sendMail({
         to: email,
         // from: '"Support Team" <support@example.com>', // override default from
-        subject: 'Reestablecer contraseña',
+        subject: 'Password Recovery',
         template: 'reset-password',
         context: {
           token,
-          logo: this.configService.get('LOGO'),
+          logo: process.env.LOGO,
         },
       })
       .catch((error) => {
