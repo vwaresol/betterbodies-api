@@ -60,7 +60,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  getUserByid(@Param('id') id: string): Promise<UserEntity> {
+  getUserById(@Param('id') id: string): Promise<UserEntity> {
     return this.userService.getUserById(id);
   }
 
