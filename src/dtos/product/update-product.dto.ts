@@ -19,6 +19,7 @@ export class UpdateProductDto {
   sku: string;
 
   @IsString()
+  @IsOptional()
   barcode: string;
 
   @IsNotEmpty()
@@ -29,7 +30,7 @@ export class UpdateProductDto {
   @IsOptional()
   salePrice: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   quantity: number;
 
