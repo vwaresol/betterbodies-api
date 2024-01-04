@@ -1,7 +1,11 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ArrayMinSize, IsArray, ValidateNested } from 'class-validator';
+import { SavePhotoDto } from './save-photo.dto';
 
-export class SavePhotosDto {
-  @IsString()
-  @IsNotEmpty()
-  productId: string;
+export class SavePhotosArrayDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @ArrayMinSize(1)
+  @Type(() => SavePhotoDto)
+  photos: SavePhotoDto[];
 }
