@@ -3,9 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class MailService {
-  constructor(
-    private mailerService: MailerService,
-  ) {}
+  constructor(private mailerService: MailerService) {}
 
   resetPassword(token: string, email: string) {
     this.sendResetPasswordEmail(token, email);
@@ -15,6 +13,8 @@ export class MailService {
     token: string,
     email: string,
   ): Promise<void> {
+    const year = new Date().getFullYear();
+
     await this.mailerService
       .sendMail({
         to: email,
@@ -24,6 +24,7 @@ export class MailService {
         context: {
           token,
           logo: process.env.LOGO,
+          year: year,
         },
       })
       .catch((error) => {
