@@ -16,7 +16,7 @@ import { UserEntity } from '../auth/user/user.entity';
 import { SubmitOrderDto } from 'src/dtos/order/submit-order.dto';
 import { ChangeOrderStatusDto } from 'src/dtos/order/change-order-status.dto';
 import { AssignDeliveryManDto } from 'src/dtos/order/assign-delivery-man.dto';
-import { OrderStatusEnum } from 'src/enums/order-status.enum';
+import { OrderStatusEnum, paymentStatus } from 'src/enums/order-status.enum';
 import { ItemCartDto } from 'src/dtos/order/item-cart.dto';
 import { PaymentService } from './payment/payment.service';
 import { PaymentMethodEnum } from 'src/enums/payment.enum';
@@ -72,7 +72,7 @@ export class OrderService {
   async getOrderHistoryByUserId(id: string): Promise<OrderEntity[]> {
     return await this.orderRepository
       .find({
-        where: { user: { id } },
+        where: { user: { id }, paymentStatus: paymentStatus.COMPLETED },
         relations: ['user', 'status', 'orderDetails', 'orderDetails.product'],
         take: 5,
         order: {
@@ -116,6 +116,10 @@ export class OrderService {
     if (paymentData.error) {
       const response = { orderId: orderSaved.id };
       throw new ConflictException(JSON.stringify(response));
+    }
+
+    if (paymentData.status === '1') {
+      this.orderRepository.updateOrderPayment(orderSaved.id);
     }
 
     return orderSaved;
@@ -225,10 +229,6 @@ export class OrderService {
           100,
       ) / 100;
     order.taxes = Math.ceil((order.total - order.subTotal) * 100) / 100;
-    if (order.addressId === null || order.total < 1000) {
-      // order.addressId = null;
-      order.picked = true;
-    }
 
     return order;
   }

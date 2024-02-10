@@ -16,7 +16,7 @@ export class PaymentRepository extends Repository<PaymentEntity> {
     paymentMethod: PaymentMethodEnum,
   ): Promise<PaymentEntity> {
     const payment = this.create({
-      referenceId: paymentData.transactionId, 
+      referenceId: paymentData.transactionId,
       status: paymentData.transactionStatus,
       textCode: paymentData.textCode && paymentData.textCode,
       paymentMethod: paymentMethod,
