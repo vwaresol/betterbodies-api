@@ -113,14 +113,11 @@ export class PaymentService implements PaymentServiceInterface {
     const billTo = new APIContracts.CustomerAddressType();
     billTo.setFirstName(user.userProfile.name);
     billTo.setLastName(user.userProfile.lastName);
-    // billTo.setCompany('Vware');
     billTo.setAddress(order.address.street);
     billTo.setCity(order.address.city);
     billTo.setState(order.address.state);
     billTo.setZip(order.address.zipCode);
-    // billTo.setCountry('Tecate');
     billTo.setPhoneNumber('12345667');
-    // billTo.setFaxNumber('12345');
     billTo.setEmail(user.username);
 
     const lineItemList = [];

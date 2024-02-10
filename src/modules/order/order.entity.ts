@@ -13,6 +13,7 @@ import { AddressEntity } from '../user-profile/address/address.entity';
 import { OrderCommentEntity } from './order-comment/order-comment.entity';
 import { OrderDetailEntity } from './order-detail/order-detail.entity';
 import { OrderStatusEntity } from './order-status/order-status.entity';
+import { paymentStatus } from 'src/enums/order-status.enum';
 
 @Entity({ name: 'order' })
 export class OrderEntity extends AbstractEntity {
@@ -45,6 +46,9 @@ export class OrderEntity extends AbstractEntity {
 
   @Column({ type: 'date', nullable: true })
   trackingDate: Date;
+
+  @Column({ type: 'enum', enum: paymentStatus, default: paymentStatus.FAILED })
+  paymentStatus: paymentStatus;
 
   @ManyToOne(() => OrderStatusEntity, (status) => status.orders)
   @JoinColumn()

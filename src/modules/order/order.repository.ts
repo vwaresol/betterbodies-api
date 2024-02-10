@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { columnsSort, orderErrorsConst } from 'src/const/order.const';
 import { SubmitOrderDto } from 'src/dtos/order/submit-order.dto';
-import { OrderStatusEnum } from 'src/enums/order-status.enum';
+import { OrderStatusEnum, paymentStatus } from 'src/enums/order-status.enum';
 import { DataSource, Repository } from 'typeorm';
 import { UserEntity } from '../auth/user/user.entity';
 import { AddressEntity } from '../user-profile/address/address.entity';
@@ -74,6 +74,23 @@ export class OrderRepository extends Repository<OrderEntity> {
     }
   }
 
+  async updateOrderPayment(id: string) {
+    const order = await this.findOne({ where: { id } }).catch((error) => {
+      throw new ConflictException(error.originalError);
+    });
+
+    order.paymentStatus = paymentStatus.COMPLETED;
+
+    try {
+      await this.save(order);
+      return order;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        orderErrorsConst.ERROR_UPDATE_PAYMENT,
+      );
+    }
+  }
+
   async getOrders(
     { status, search, column, sort }: OrderFilterDto,
     paginationOpts: IPaginationOptions,
@@ -84,7 +101,9 @@ export class OrderRepository extends Repository<OrderEntity> {
       .leftJoinAndSelect('order.address', 'address')
       .leftJoinAndSelect('user.userProfile', 'userInfo')
       .leftJoinAndSelect('userInfo.phone', 'phone')
-      .where({});
+      .where('order.paymentStatus = :status', {
+        status: paymentStatus.COMPLETED,
+      });
 
     if (status) {
       query.andWhere('order.statusId = :status', { status });
