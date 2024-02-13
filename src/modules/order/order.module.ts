@@ -18,6 +18,7 @@ import { RoleRepository } from '../auth/role/role.repository';
 import { PaymentService } from './payment/payment.service';
 import { PaymentRepository } from './payment/payment.repository';
 import { HttpModule } from '@nestjs/axios';
+import { MailService } from 'src/providers/mail/mail.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderEntity]), AuthModule, HttpModule],
@@ -36,6 +37,7 @@ import { HttpModule } from '@nestjs/axios';
     OrderDetailRepository,
     PaymentService,
     PaymentRepository,
+    MailService,
   ],
   controllers: [OrderController],
 })

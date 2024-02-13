@@ -22,6 +22,7 @@ import { PaymentService } from './payment/payment.service';
 import { PaymentMethodEnum } from 'src/enums/payment.enum';
 import { UpdatePaymentDto } from 'src/dtos/order/order-update-payment.dto';
 import { OrderStatusEntity } from './order-status/order-status.entity';
+import { MailService } from 'src/providers/mail/mail.service';
 
 @Injectable()
 export class OrderService {
@@ -30,6 +31,7 @@ export class OrderService {
     private productService: ProductService,
     private configService: ConfigService,
     private paymentService: PaymentService,
+    private mailService: MailService,
   ) {}
 
   getOrders(
@@ -121,6 +123,9 @@ export class OrderService {
     if (paymentData.status === '1') {
       this.orderRepository.updateOrderPayment(orderSaved.id);
     }
+
+    const invoiceData = this.setInvoiceData(orderSaved, orderPreProcessed);
+    this.mailService.orderConfirmation(invoiceData);
 
     return orderSaved;
   }
@@ -254,5 +259,24 @@ export class OrderService {
 
   getStatus(): Promise<OrderStatusEntity[]> {
     return this.orderRepository.getStatus();
+  }
+
+  private setInvoiceData(orderSaved, orderPreProcessed) {
+    let user = orderSaved.user;
+    if (orderSaved.customer) {
+      user = orderSaved.customer;
+    }
+
+    return {
+      customer: user,
+      number: orderSaved.orderNumber,
+      total: orderPreProcessed.total,
+      subtotal: orderPreProcessed.subTotal ? orderPreProcessed.subTotal : 0,
+      tax: orderPreProcessed.taxes ? orderPreProcessed.taxes : 0,
+      date: orderSaved.createdAt,
+      cart: orderPreProcessed.cart,
+      address: orderSaved.address,
+      status: orderSaved.status,
+    };
   }
 }
