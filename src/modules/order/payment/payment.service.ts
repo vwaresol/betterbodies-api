@@ -5,8 +5,7 @@ import { OrderEntity } from '../order.entity';
 import { PaymentEntity } from './payment.entity';
 import { PaymentRepository } from './payment.repository';
 import { UserEntity } from 'src/modules/auth/user/user.entity';
-import { APIContracts } from 'authorizenet';
-import { APIControllers } from 'authorizenet';
+import { APIContracts, APIControllers, Constants } from 'authorizenet';
 import { PaymentResponseDTO } from 'src/dtos/payment/payment-response.dto';
 import { ConfigService } from '@nestjs/config';
 import { PaymentMethodEnum } from 'src/enums/payment.enum';
@@ -42,30 +41,30 @@ export class PaymentService implements PaymentServiceInterface {
     expiryDate: string,
     cvc: string,
   ): Promise<PaymentEntity | object> {
-    const response = await this.chargeCreditCard(
+    const response: any = await this.chargeCreditCard(
       order,
       user,
       cardNumber,
       expiryDate,
       cvc,
     );
+
+    const data = response?.data;
     const paymentData: PaymentResponseDTO = {
-      transactionId: response[0],
-      transactionStatus: response[1],
-      textCode: response[2],
+      transactionId: data[0],
+      transactionStatus: data[1],
+      textCode: data[2],
     };
 
-    if (
-      ['2', '3', '4', '5', '6', '7', '8', '10', '16'].includes(
-        paymentData.transactionStatus,
-      )
-    )
-      return { error: true };
     const payment = await this.paymentRepository.createPayment(
       order,
       paymentData,
       paymentMethod,
     );
+
+    if (response.error) {
+      return response;
+    }
     return payment;
   }
 
@@ -84,6 +83,8 @@ export class PaymentService implements PaymentServiceInterface {
     merchantAuthenticationType.setTransactionKey(
       this.configService.get('AUTHORIZENET_KEY'),
     );
+    console.log(this.configService.get('AUTHORIZENET_NAME'));
+    console.log(this.configService.get('AUTHORIZENET_KEY'));
     const creditCard = new APIContracts.CreditCardType();
     creditCard.setCardNumber(cardNumber.replace(/\s+/g, ''));
     creditCard.setExpirationDate(
@@ -176,6 +177,17 @@ export class PaymentService implements PaymentServiceInterface {
     const ctrl = new APIControllers.CreateTransactionController(
       createRequest.getJSON(),
     );
+    console.log(
+      'IS PRODUCTION',
+      this.configService.get('AUTHORIZENET_ENV') === 'PRODUCTION'
+        ? 'PROD'
+        : 'sandbox',
+    );
+    ctrl.setEnvironment(
+      this.configService.get('AUTHORIZENET_ENV') === 'PRODUCTION'
+        ? Constants.endpoint.production
+        : Constants.endpoint.sandbox,
+    );
 
     let data: string[];
     return new Promise(function (resolve) {
@@ -184,7 +196,6 @@ export class PaymentService implements PaymentServiceInterface {
         const response = new APIContracts.CreateTransactionResponse(
           APIResponse,
         );
-
         if (response != null) {
           if (
             response.getMessages().getResultCode() ==
@@ -201,23 +212,25 @@ export class PaymentService implements PaymentServiceInterface {
                 response.getTransactionResponse().getResponseCode(),
               ];
 
-              return resolve(data);
+              return resolve({ data: data, error: false });
             } else {
-              console.log('Failed Transaction.');
-              if (response.getTransactionResponse().getErrors() != null) {
+              console.log('Failed Transaction.', response.messages);
+              if (response.getTransactionResponse().getErrors()) {
+                const error = response
+                  .getTransactionResponse()
+                  .getErrors()
+                  .getError()[0];
+
                 data = [
                   response.getTransactionResponse().getTransId(),
-                  response
-                    .getTransactionResponse()
-                    .getErrors()
-                    .getError()[0]
-                    .getErrorCode(),
-                  response.getTransactionResponse().getResponseCode(),
+                  error.errorCode,
+                  error.errorText,
                 ];
-                return resolve(data);
+                return resolve({ data: data, error: true });
               }
             }
           } else {
+            console.log(response.messages.message);
             data = [
               0,
               response
@@ -227,10 +240,7 @@ export class PaymentService implements PaymentServiceInterface {
                 .getErrorCode(),
               response.getTransactionResponse().getResponseCode(),
             ];
-
-            console.log('error', data);
-
-            return resolve(data);
+            return resolve({ data: data, error: false });
           }
         }
       });
