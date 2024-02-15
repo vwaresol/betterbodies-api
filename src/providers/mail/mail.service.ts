@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { orderStatusDictionaryForEmial } from 'src/const/order.const';
 
 @Injectable()
 export class MailService {
@@ -35,7 +36,6 @@ export class MailService {
   async orderConfirmation(order) {
     const today = new Date(order.date);
     const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -55,6 +55,8 @@ export class MailService {
       }
     });
 
+    order.total = order.total.toFixed(2);
+
     this.sendConfirmationEmails(order);
   }
 
@@ -69,7 +71,8 @@ export class MailService {
         customer: true,
         estado: true,
         tax: 8,
-        status: order.status.status,
+        status: orderStatusDictionaryForEmial[order.status.status],
+        phone: order.phone.phone,
       },
     });
   }

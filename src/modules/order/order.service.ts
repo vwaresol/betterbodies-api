@@ -23,6 +23,7 @@ import { PaymentMethodEnum } from 'src/enums/payment.enum';
 import { UpdatePaymentDto } from 'src/dtos/order/order-update-payment.dto';
 import { OrderStatusEntity } from './order-status/order-status.entity';
 import { MailService } from 'src/providers/mail/mail.service';
+import { PhoneService } from '../user-profile/phone/phone.service';
 
 @Injectable()
 export class OrderService {
@@ -32,6 +33,7 @@ export class OrderService {
     private configService: ConfigService,
     private paymentService: PaymentService,
     private mailService: MailService,
+    private phoneService: PhoneService,
   ) {}
 
   getOrders(
@@ -93,6 +95,8 @@ export class OrderService {
     let paymentData: any = {};
     const orderPreProcessed = await this.preProcessOrder(order);
 
+    const phone = await this.phoneService.getPhone(orderPreProcessed.phoneId);
+
     const orderSaved = await this.orderRepository.saveOrder(
       orderPreProcessed,
       user,
@@ -124,7 +128,11 @@ export class OrderService {
       this.orderRepository.updateOrderPayment(orderSaved.id);
     }
 
-    const invoiceData = this.setInvoiceData(orderSaved, orderPreProcessed);
+    const invoiceData = this.setInvoiceData(
+      orderSaved,
+      orderPreProcessed,
+      phone,
+    );
     this.mailService.orderConfirmation(invoiceData);
 
     return orderSaved;
@@ -261,7 +269,7 @@ export class OrderService {
     return this.orderRepository.getStatus();
   }
 
-  private setInvoiceData(orderSaved, orderPreProcessed) {
+  private setInvoiceData(orderSaved, orderPreProcessed, phone) {
     let user = orderSaved.user;
     if (orderSaved.customer) {
       user = orderSaved.customer;
@@ -277,6 +285,7 @@ export class OrderService {
       cart: orderPreProcessed.cart,
       address: orderSaved.address,
       status: orderSaved.status,
+      phone: phone,
     };
   }
 }

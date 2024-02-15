@@ -17,6 +17,10 @@ export class PhoneService {
     });
   }
 
+  async getPhone(id: string): Promise<PhoneEntity | undefined> {
+    return await this.phoneRepository.findOne({ where: { id } });
+  }
+
   async createPhone(
     userProfileId: string,
     createPhoneDto: CreatePhoneDto,
