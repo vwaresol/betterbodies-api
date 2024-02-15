@@ -22,6 +22,8 @@ import { PaymentService } from './payment/payment.service';
 import { PaymentMethodEnum } from 'src/enums/payment.enum';
 import { UpdatePaymentDto } from 'src/dtos/order/order-update-payment.dto';
 import { OrderStatusEntity } from './order-status/order-status.entity';
+import { MailService } from 'src/providers/mail/mail.service';
+import { PhoneService } from '../user-profile/phone/phone.service';
 
 @Injectable()
 export class OrderService {
@@ -30,6 +32,8 @@ export class OrderService {
     private productService: ProductService,
     private configService: ConfigService,
     private paymentService: PaymentService,
+    private mailService: MailService,
+    private phoneService: PhoneService,
   ) {}
 
   getOrders(
@@ -91,6 +95,8 @@ export class OrderService {
     let paymentData: any = {};
     const orderPreProcessed = await this.preProcessOrder(order);
 
+    const phone = await this.phoneService.getPhone(orderPreProcessed.phoneId);
+
     const orderSaved = await this.orderRepository.saveOrder(
       orderPreProcessed,
       user,
@@ -121,6 +127,13 @@ export class OrderService {
     if (paymentData.status === '1') {
       this.orderRepository.updateOrderPayment(orderSaved.id);
     }
+
+    const invoiceData = this.setInvoiceData(
+      orderSaved,
+      orderPreProcessed,
+      phone,
+    );
+    this.mailService.orderConfirmation(invoiceData);
 
     return orderSaved;
   }
@@ -254,5 +267,25 @@ export class OrderService {
 
   getStatus(): Promise<OrderStatusEntity[]> {
     return this.orderRepository.getStatus();
+  }
+
+  private setInvoiceData(orderSaved, orderPreProcessed, phone) {
+    let user = orderSaved.user;
+    if (orderSaved.customer) {
+      user = orderSaved.customer;
+    }
+
+    return {
+      customer: user,
+      number: orderSaved.orderNumber,
+      total: orderPreProcessed.total,
+      subtotal: orderPreProcessed.subTotal ? orderPreProcessed.subTotal : 0,
+      tax: orderPreProcessed.taxes ? orderPreProcessed.taxes : 0,
+      date: orderSaved.createdAt,
+      cart: orderPreProcessed.cart,
+      address: orderSaved.address,
+      status: orderSaved.status,
+      phone: phone,
+    };
   }
 }
