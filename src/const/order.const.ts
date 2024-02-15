@@ -13,3 +13,11 @@ export const orderErrorsConst = {
   ERROR_EMPTY_COMMENT: 'Need to add a comment to cancel the order',
   ERROR_UPDATE_PAYMENT: 'Error update the payment',
 };
+
+export const orderStatusDictionaryForEmial = {
+  Created: 'created',
+  'On Process': 'on process',
+  'On Transit': 'on transit',
+  Delivered: 'delivered',
+  Canceled: 'canceled',
+};
