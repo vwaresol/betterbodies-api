@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { GalleryEntity } from 'src/modules/gallery/gallery.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +7,7 @@ import {
   TreeChildren,
   Entity,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'category' })
@@ -28,4 +30,7 @@ export class CategoryEntity {
   @CreateDateColumn()
   @Exclude()
   createdAt: Date;
+
+  @OneToMany(() => GalleryEntity, (gallery) => gallery.category)
+  gallery: GalleryEntity;
 }
