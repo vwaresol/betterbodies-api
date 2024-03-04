@@ -124,7 +124,7 @@ export class OrderService {
       throw new ConflictException(JSON.stringify(response));
     }
 
-    if (paymentData.status === '1') {
+    if (paymentData.status === '1' || paymentData.status === 'COMPLETED') {
       this.orderRepository.updateOrderPayment(orderSaved.id);
     }
 
