@@ -106,10 +106,12 @@ export class OrderService {
       paymentData = await this.paymentService.createPaymentAuthorizenet(
         orderSaved,
         user,
+        phone,
         order.paymentMethod,
         order.cardNumber,
         order.expiryDate,
         order.cvc,
+        order.billingAddressId,
       );
     else
       paymentData = await this.paymentService.createPaymentPaypal(
@@ -143,14 +145,16 @@ export class OrderService {
     updatePaymentDto: UpdatePaymentDto,
     @GetUser() user: UserEntity,
   ): Promise<OrderEntity> {
-    // recuperar orden
     const order = await this.getOrderById(id);
+    const phone = await this.phoneService.getPhone(updatePaymentDto.phoneId);
     let paymentData: any = {};
     if (updatePaymentDto.paymentMethod === PaymentMethodEnum.AUTORIZENET)
       paymentData = await this.paymentService.createPaymentAuthorizenet(
         order,
         user,
+        phone,
         updatePaymentDto.paymentMethod,
+        '',
         '',
         '',
         '',
