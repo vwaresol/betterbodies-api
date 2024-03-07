@@ -47,7 +47,7 @@ export class SubmitOrderDto {
   @IsString()
   cvc: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   billingAddressId: string;
 

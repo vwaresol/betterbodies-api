@@ -38,7 +38,7 @@ export class CreateAddressDto {
   state: string;
 
   @MinLength(1)
-  @MaxLength(5)
+  @MaxLength(6)
   zipCode: string;
 
   @IsBoolean()
