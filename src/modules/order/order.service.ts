@@ -128,14 +128,14 @@ export class OrderService {
 
     if (paymentData.status === '1' || paymentData.status === 'COMPLETED') {
       this.orderRepository.updateOrderPayment(orderSaved.id);
-    }
 
-    const invoiceData = this.setInvoiceData(
-      orderSaved,
-      orderPreProcessed,
-      phone,
-    );
-    this.mailService.orderConfirmation(invoiceData);
+      const invoiceData = this.setInvoiceData(
+        orderSaved,
+        orderPreProcessed,
+        phone,
+      );
+      this.mailService.orderConfirmation(invoiceData);
+    }
 
     return orderSaved;
   }
