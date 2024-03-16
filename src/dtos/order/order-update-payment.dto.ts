@@ -30,4 +30,8 @@ export class UpdatePaymentDto {
   @MinLength(3)
   @MaxLength(3)
   cvv: string;
+
+  @IsOptional()
+  @IsString()
+  phoneId: string;
 }
