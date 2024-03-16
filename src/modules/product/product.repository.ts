@@ -77,7 +77,7 @@ export class ProductRepository extends Repository<ProductEntity> {
   ): Promise<Pagination<ProductEntity>> {
     const query = this.createQueryBuilder('product')
       .leftJoinAndSelect('product.categories', 'categories')
-      .leftJoinAndSelect('product.photos', 'photos')
+      .innerJoinAndSelect('product.photos', 'photos')
       .where('product.isActive = TRUE');
 
     if (cat) {
