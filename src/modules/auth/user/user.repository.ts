@@ -89,7 +89,7 @@ export class UserRepository extends Repository<UserEntity> {
 
     if (search) {
       query.andWhere(
-        '(LOWER(user.username) LIKE LOWER(:search) OR LOWER(userProfile.name) LIKE LOWER(:search) OR LOWER(userProfileinfo.last_name) LIKE LOWER(:search))',
+        '(LOWER(user.username) LIKE LOWER(:search) OR LOWER(userProfile.name) LIKE LOWER(:search) OR LOWER(userProfile.lastName) LIKE LOWER(:search))',
         { search: `%${search}%` },
       );
     }

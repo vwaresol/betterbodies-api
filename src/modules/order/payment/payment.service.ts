@@ -9,11 +9,15 @@ import { APIContracts, APIControllers, Constants } from 'authorizenet';
 import { PaymentResponseDTO } from 'src/dtos/payment/payment-response.dto';
 import { ConfigService } from '@nestjs/config';
 import { PaymentMethodEnum } from 'src/enums/payment.enum';
+import { AddressEntity } from 'src/modules/user-profile/address/address.entity';
+import { AddressService } from 'src/modules/user-profile/address/address.service';
+import { PhoneEntity } from 'src/modules/user-profile/phone/phone.entity';
 @Injectable()
 export class PaymentService implements PaymentServiceInterface {
   constructor(
     @InjectRepository(PaymentRepository)
     private paymentRepository: PaymentRepository,
+    private addresService: AddressService,
     private configService: ConfigService,
   ) {}
 
@@ -36,17 +40,25 @@ export class PaymentService implements PaymentServiceInterface {
   async createPaymentAuthorizenet(
     order: OrderEntity,
     user: UserEntity,
+    phone: PhoneEntity,
     paymentMethod: PaymentMethodEnum,
     cardNumber: string,
     expiryDate: string,
     cvc: string,
+    billingAddressId: string,
   ): Promise<PaymentEntity | object> {
+    const billingAddress = await this.addresService.getAddressById(
+      billingAddressId,
+    );
+
     const response: any = await this.chargeCreditCard(
       order,
       user,
+      phone,
       cardNumber,
       expiryDate,
       cvc,
+      billingAddress,
     );
 
     const data = response?.data;
@@ -71,9 +83,11 @@ export class PaymentService implements PaymentServiceInterface {
   async chargeCreditCard(
     order: OrderEntity,
     user: UserEntity,
+    phone: PhoneEntity,
     cardNumber: string,
     expiryDate: string,
     cvc: string,
+    billingAddress: AddressEntity,
   ) {
     const merchantAuthenticationType =
       new APIContracts.MerchantAuthenticationType();
@@ -114,11 +128,11 @@ export class PaymentService implements PaymentServiceInterface {
     const billTo = new APIContracts.CustomerAddressType();
     billTo.setFirstName(user.userProfile.name);
     billTo.setLastName(user.userProfile.lastName);
-    billTo.setAddress(order.address.street);
-    billTo.setCity(order.address.city);
-    billTo.setState(order.address.state);
-    billTo.setZip(order.address.zipCode);
-    billTo.setPhoneNumber('12345667');
+    billTo.setAddress(billingAddress.street);
+    billTo.setCity(billingAddress.city);
+    billTo.setState(billingAddress.state);
+    billTo.setZip(billingAddress.zipCode);
+    billTo.setPhoneNumber(phone.phone);
     billTo.setEmail(user.username);
 
     const lineItemList = [];

@@ -21,6 +21,7 @@ import { HttpModule } from '@nestjs/axios';
 import { MailService } from 'src/providers/mail/mail.service';
 import { PhoneService } from '../user-profile/phone/phone.service';
 import { PhoneRepository } from '../user-profile/phone/phone.repository';
+import { AddressService } from '../user-profile/address/address.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderEntity]), AuthModule, HttpModule],
@@ -42,6 +43,7 @@ import { PhoneRepository } from '../user-profile/phone/phone.repository';
     MailService,
     PhoneService,
     PhoneRepository,
+    AddressService,
   ],
   controllers: [OrderController],
 })
