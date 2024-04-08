@@ -11,11 +11,11 @@ export class CreatePhoneDto {
   @IsString()
   @MinLength(1)
   @MaxLength(2)
-  @IsNotEmpty()
+  @IsOptional()
   code: string;
 
   @MinLength(5)
-  @MaxLength(10)
+  @MaxLength(15)
   @IsNotEmpty()
   phone: string;
 
