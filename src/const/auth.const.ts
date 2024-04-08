@@ -1,6 +1,6 @@
 export const authConst = {
   SERVICE_INTERFACE: 'AuthServiceInterface',
-  TOKEN_EXPIRATION: 3600,
+  TOKEN_EXPIRATION: 3600 * 7 * 24,
 };
 
 export const authErrorsConst = {
