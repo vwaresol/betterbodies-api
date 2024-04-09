@@ -21,10 +21,12 @@ export class CreateAddressDto {
   @MaxLength(10)
   intNumber: string;
 
+  @IsOptional()
   @MinLength(1)
   @MaxLength(10)
   extNumber: string;
 
+  @IsOptional()
   @MinLength(1)
   @MaxLength(100)
   suburb: string;

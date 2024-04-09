@@ -1,21 +1,8 @@
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 
 export class CreatePhoneDto {
-  @IsString()
-  @MinLength(1)
-  @MaxLength(2)
-  @IsOptional()
-  code: string;
-
-  @MinLength(5)
-  @MaxLength(15)
+  @MinLength(7)
+  @MaxLength(12)
   @IsNotEmpty()
   phone: string;
 
