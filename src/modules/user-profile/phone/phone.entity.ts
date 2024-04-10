@@ -4,6 +4,12 @@ import { UserProfileEntity } from '../user-profile.entity';
 
 @Entity({ name: 'phone' })
 export class PhoneEntity extends AbstractEntity {
+  @Column({
+    length: 2,
+    nullable: true,
+  })
+  code: string;
+
   @Column({ length: 12 })
   phone: string;
 
