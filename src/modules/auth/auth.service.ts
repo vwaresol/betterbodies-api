@@ -42,7 +42,7 @@ export class AuthService implements AuthServiceInterface {
   }: AuthCredentialsDto): Promise<JwtPayload> {
     const user = await this.userService.findForUsername(username);
 
-    if (user.password === '0') {
+    if (user && user.password === '0') {
       throw new ConflictException(authErrorsConst.ERROR_PASSWORD_NOT_FOUND);
     }
 
