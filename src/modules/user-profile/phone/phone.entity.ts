@@ -1,4 +1,3 @@
-import { Exclude } from 'class-transformer';
 import { AbstractEntity } from 'src/common/entities/abstract-entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { UserProfileEntity } from '../user-profile.entity';
@@ -11,7 +10,7 @@ export class PhoneEntity extends AbstractEntity {
   })
   code: string;
 
-  @Column({ length: 10 })
+  @Column({ length: 12 })
   phone: string;
 
   @Column({ default: true })

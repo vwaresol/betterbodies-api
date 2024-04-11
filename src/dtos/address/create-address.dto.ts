@@ -17,18 +17,6 @@ export class CreateAddressDto {
   @MaxLength(100)
   street: string;
 
-  @IsOptional()
-  @MaxLength(10)
-  intNumber: string;
-
-  @MinLength(1)
-  @MaxLength(10)
-  extNumber: string;
-
-  @MinLength(1)
-  @MaxLength(100)
-  suburb: string;
-
   @MinLength(1)
   @MaxLength(100)
   city: string;
