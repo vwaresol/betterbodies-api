@@ -7,6 +7,7 @@ import { CategoryService } from '../product/category/category.service';
 import { UpdateGalleryDto } from 'src/dtos/gallery/update-gallery.dto';
 import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import { GalleryEntity } from './gallery.entity';
+import { GalleryFilterDto } from 'src/dtos/gallery/gallery-filter.dto';
 
 @Injectable()
 export class GalleryService implements GalleryServiceInterface {
@@ -17,9 +18,10 @@ export class GalleryService implements GalleryServiceInterface {
   ) {}
 
   getGallery(
+    gallerytFilterDto: GalleryFilterDto,
     paginationOpts: IPaginationOptions,
   ): Promise<Pagination<GalleryEntity>> {
-    return this.galleryRepository.getGallery(paginationOpts);
+    return this.galleryRepository.getGallery(gallerytFilterDto, paginationOpts);
   }
 
   async getGalleryId(id: string) {

@@ -15,6 +15,7 @@ import { UpdateGalleryDto } from 'src/dtos/gallery/update-gallery.dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { GalleryEntity } from './gallery.entity';
 import { ConfigService } from '@nestjs/config';
+import { GalleryFilterDto } from 'src/dtos/gallery/gallery-filter.dto';
 
 @Controller('gallery')
 export class GalleryController {
@@ -25,11 +26,12 @@ export class GalleryController {
 
   @Get('/')
   get(
+    @Query() gallerytFilterDto: GalleryFilterDto,
     @Query('page') page: string,
     @Query('limit') limit: string,
   ): Promise<Pagination<GalleryEntity>> {
-    limit = !limit ? '80' : limit;
-    return this.galleryService.getGallery({
+    limit = !limit ? '9' : limit;
+    return this.galleryService.getGallery(gallerytFilterDto, {
       page,
       limit,
       route: this.configService.get('HOST'),

@@ -28,7 +28,7 @@ export class AddressEntity extends AbstractEntity {
   @Column({ length: 100 })
   state: string;
 
-  @Column({ length: 5 })
+  @Column({ length: 5, nullable: true })
   zipCode: string;
 
   @Column({ default: true })

@@ -14,6 +14,7 @@ import {
   Pagination,
   paginate,
 } from 'nestjs-typeorm-paginate';
+import { GalleryFilterDto } from 'src/dtos/gallery/gallery-filter.dto';
 
 @Injectable()
 export class GalleryRepository extends Repository<GalleryEntity> {
@@ -25,12 +26,17 @@ export class GalleryRepository extends Repository<GalleryEntity> {
   }
 
   async getGallery(
+    { cat }: GalleryFilterDto,
     paginateOpts: IPaginationOptions,
   ): Promise<Pagination<GalleryEntity>> {
     const query = this.createQueryBuilder('gallery').leftJoinAndSelect(
       'gallery.category',
       'category',
     );
+
+    if (cat) {
+      query.andWhere('category.id = :categoryId', { categoryId: cat });
+    }
 
     try {
       return await paginate(query, paginateOpts);
