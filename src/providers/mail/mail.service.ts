@@ -62,7 +62,7 @@ export class MailService {
 
   private async sendConfirmationEmails(order): Promise<void> {
     await this.mailerService.sendMail({
-      to: [order.customer.username],
+      to: [order.customer.username, 'targa5@aol.com'],
       subject: 'order confirmed',
       template: 'new-order',
       context: {

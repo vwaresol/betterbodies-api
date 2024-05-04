@@ -106,10 +106,12 @@ export class OrderService {
       paymentData = await this.paymentService.createPaymentAuthorizenet(
         orderSaved,
         user,
+        phone,
         order.paymentMethod,
         order.cardNumber,
         order.expiryDate,
         order.cvc,
+        order.billingAddressId,
       );
     else
       paymentData = await this.paymentService.createPaymentPaypal(
@@ -124,16 +126,16 @@ export class OrderService {
       throw new ConflictException(JSON.stringify(response));
     }
 
-    if (paymentData.status === '1') {
+    if (paymentData.status === '1' || paymentData.status === 'COMPLETED') {
       this.orderRepository.updateOrderPayment(orderSaved.id);
-    }
 
-    const invoiceData = this.setInvoiceData(
-      orderSaved,
-      orderPreProcessed,
-      phone,
-    );
-    this.mailService.orderConfirmation(invoiceData);
+      const invoiceData = this.setInvoiceData(
+        orderSaved,
+        orderPreProcessed,
+        phone,
+      );
+      this.mailService.orderConfirmation(invoiceData);
+    }
 
     return orderSaved;
   }
@@ -143,14 +145,16 @@ export class OrderService {
     updatePaymentDto: UpdatePaymentDto,
     @GetUser() user: UserEntity,
   ): Promise<OrderEntity> {
-    // recuperar orden
     const order = await this.getOrderById(id);
+    const phone = await this.phoneService.getPhone(updatePaymentDto.phoneId);
     let paymentData: any = {};
     if (updatePaymentDto.paymentMethod === PaymentMethodEnum.AUTORIZENET)
       paymentData = await this.paymentService.createPaymentAuthorizenet(
         order,
         user,
+        phone,
         updatePaymentDto.paymentMethod,
+        '',
         '',
         '',
         '',

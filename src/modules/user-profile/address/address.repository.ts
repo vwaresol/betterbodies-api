@@ -32,7 +32,13 @@ export class AddressRepository extends Repository<AddressEntity> {
       userProfile,
     });
 
+    const hasAddress = await this.getAddressCount(userProfileId);
+
     if (address.main) await this.removeMain(userProfile);
+
+    if (hasAddress === 0) {
+      address.main = true;
+    }
 
     if (address.billingAddress) await this.removeBillingAddress(userProfile);
 
@@ -70,5 +76,17 @@ export class AddressRepository extends Repository<AddressEntity> {
     userProfile: UserProfileEntity,
   ): Promise<void> {
     await this.update({ userProfile }, { billingAddress: false });
+  }
+
+  async getAddressCount(id: string): Promise<number> {
+    try {
+      const count = await this.count({
+        where: { userProfile: { id } },
+      });
+      return count;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Error getting the number of user addresses');
+    }
   }
 }
