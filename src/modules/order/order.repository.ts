@@ -177,6 +177,23 @@ export class OrderRepository extends Repository<OrderEntity> {
     }
   }
 
+  async updateNumberOrder(order: OrderEntity) {
+    const query = await this.createQueryBuilder('order')
+      .select('MAX(order.orderNumber)', 'max')
+      .getRawOne();
+
+    order.orderNumber = Number(query.max) + 1;
+
+    try {
+      await this.save(order);
+      return order;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        orderErrorsConst.ERROR_CREATING_ORDER,
+      );
+    }
+  }
+
   async assignDeliveryMan({
     orderId,
     userId,

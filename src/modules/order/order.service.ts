@@ -102,6 +102,8 @@ export class OrderService {
       user,
     );
 
+    await this.orderRepository.updateNumberOrder(orderSaved);
+
     if (order.paymentMethod === PaymentMethodEnum.AUTORIZENET)
       paymentData = await this.paymentService.createPaymentAuthorizenet(
         orderSaved,
