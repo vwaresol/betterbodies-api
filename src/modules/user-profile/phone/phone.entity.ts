@@ -10,7 +10,7 @@ export class PhoneEntity extends AbstractEntity {
   })
   code: string;
 
-  @Column({ length: 12 })
+  @Column({ length: 12, nullable: true })
   phone: string;
 
   @Column({ default: true })

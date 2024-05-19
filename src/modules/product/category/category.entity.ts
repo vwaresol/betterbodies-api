@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { GalleryEntity } from 'src/modules/gallery/gallery.entity';
+import { GalleryImageEntity } from 'src/modules/image/gallery-image.entity';
 import {
   Column,
   CreateDateColumn,
@@ -33,4 +34,7 @@ export class CategoryEntity {
 
   @OneToMany(() => GalleryEntity, (gallery) => gallery.category)
   gallery: GalleryEntity;
+
+  @OneToMany(() => GalleryImageEntity, (image) => image.category)
+  image: GalleryImageEntity;
 }
