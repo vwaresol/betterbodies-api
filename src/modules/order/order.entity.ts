@@ -1,12 +1,5 @@
 import { AbstractEntity } from 'src/common/entities/abstract-entity';
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  Generated,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { UserEntity } from '../auth/user/user.entity';
 import { PaymentEntity } from './payment/payment.entity';
 import { AddressEntity } from '../user-profile/address/address.entity';
@@ -17,7 +10,6 @@ import { paymentStatus } from 'src/enums/order-status.enum';
 
 @Entity({ name: 'order' })
 export class OrderEntity extends AbstractEntity {
-  @Generated('increment')
   @Column({ type: 'bigint' })
   orderNumber: number;
 

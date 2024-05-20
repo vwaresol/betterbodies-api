@@ -55,8 +55,15 @@ export class OrderRepository extends Repository<OrderEntity> {
     const comment = this.createOrderComment(orderSubmitted.comment, user);
     const orderDetails = this.processDetails(orderSubmitted.cart);
 
+    const { max } = await this.createQueryBuilder('order')
+      .select('MAX(order.orderNumber)', 'max')
+      .getRawOne();
+
+    const orderNumber = +max + 1;
+
     const order = this.create({
       ...orderSubmitted,
+      orderNumber,
       status,
       address,
       user,
@@ -174,23 +181,6 @@ export class OrderRepository extends Repository<OrderEntity> {
       return await this.save(order);
     } catch (error) {
       throw error;
-    }
-  }
-
-  async updateNumberOrder(order: OrderEntity) {
-    const query = await this.createQueryBuilder('order')
-      .select('MAX(order.orderNumber)', 'max')
-      .getRawOne();
-
-    order.orderNumber = Number(query.max) + 1;
-
-    try {
-      await this.save(order);
-      return order;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        orderErrorsConst.ERROR_CREATING_ORDER,
-      );
     }
   }
 
