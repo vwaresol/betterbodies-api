@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as sharp from 'sharp';
 import * as fs from 'fs';
 import { ImageServiceInterface } from './image-service.interface';

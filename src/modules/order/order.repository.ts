@@ -55,8 +55,15 @@ export class OrderRepository extends Repository<OrderEntity> {
     const comment = this.createOrderComment(orderSubmitted.comment, user);
     const orderDetails = this.processDetails(orderSubmitted.cart);
 
+    const { max } = await this.createQueryBuilder('order')
+      .select('MAX(order.orderNumber)', 'max')
+      .getRawOne();
+
+    const orderNumber = +max + 1;
+
     const order = this.create({
       ...orderSubmitted,
+      orderNumber,
       status,
       address,
       user,
