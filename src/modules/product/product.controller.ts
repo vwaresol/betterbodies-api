@@ -14,10 +14,11 @@ import { ConfigService } from '@nestjs/config';
 import { ProductFilterDto } from 'src/dtos/product/product-filter.dto';
 import { ProductEntity } from './product.entity';
 import { ProductService } from './product.service';
-import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { CreateProductDto } from 'src/dtos/product/create-product.dto';
 import { UpdateProductDto } from 'src/dtos/product/update-product.dto';
+import { PageOptionsDto } from 'src/pagination/dto/page-options.dto';
+import { PageDto } from 'src/pagination/dto/page.dto';
 
 @Controller('product')
 export class ProductController {
@@ -29,15 +30,9 @@ export class ProductController {
   @Get()
   get(
     @Query() productFilterDto: ProductFilterDto,
-    @Query('page') page: string,
-    @Query('limit') limit: string,
-  ): Promise<Pagination<ProductEntity>> {
-    limit = !limit ? '80' : limit;
-    return this.productService.get(productFilterDto, {
-      page,
-      limit,
-      route: this.configService.get('HOST'),
-    });
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<ProductEntity>> {
+    return this.productService.get(productFilterDto, pageOptionsDto);
   }
 
   @Get(':id')
