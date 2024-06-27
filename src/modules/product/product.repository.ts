@@ -81,7 +81,7 @@ export class ProductRepository extends Repository<ProductEntity> {
       .where('product.isActive = TRUE');
 
     if (cat) {
-      query.andWhere('categories.name = :category', { category: cat });
+      query.andWhere('categories.id = :category', { category: cat });
     }
 
     if (q) {
