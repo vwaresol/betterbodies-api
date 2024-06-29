@@ -11,11 +11,9 @@ import { DataSource, In, Repository } from 'typeorm';
 import { CategoryEntity } from './category/category.entity';
 import { CategoryRepository } from './category/cateogory.repository';
 import { ProductEntity } from './product.entity';
-import {
-  IPaginationOptions,
-  paginate,
-  Pagination,
-} from 'nestjs-typeorm-paginate';
+import { PageDto } from 'src/pagination/dto/page.dto';
+import { PageOptionsDto } from 'src/pagination/dto/page-options.dto';
+import { PageMetaDto } from 'src/pagination/dto/page-meta.dto';
 
 @Injectable()
 export class ProductRepository extends Repository<ProductEntity> {
@@ -72,12 +70,12 @@ export class ProductRepository extends Repository<ProductEntity> {
   }
 
   async getProducts(
-    { cat, q, column, sort }: ProductFilterDto,
-    paginateOpts: IPaginationOptions,
-  ): Promise<Pagination<ProductEntity>> {
+    { cat, q, column, sort, limit }: ProductFilterDto,
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<ProductEntity>> {
     const query = this.createQueryBuilder('product')
       .leftJoinAndSelect('product.categories', 'categories')
-      .innerJoinAndSelect('product.photos', 'photos')
+      .leftJoinAndSelect('product.photos', 'photos')
       .where('product.isActive = TRUE');
 
     if (cat) {
@@ -95,8 +93,18 @@ export class ProductRepository extends Repository<ProductEntity> {
       query.orderBy(sortColumns[column], sort);
     }
 
+    if (limit) {
+      query
+        .skip((pageOptionsDto.page - 1) * pageOptionsDto.limit)
+        .take(pageOptionsDto.limit);
+    }
+
+    const itemCount = await query.getCount();
+    const { entities } = await query.getRawAndEntities();
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+
     try {
-      return await paginate(query, paginateOpts);
+      return new PageDto(entities, pageMetaDto);
     } catch (error) {
       throw new InternalServerErrorException();
     }

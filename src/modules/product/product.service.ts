@@ -2,11 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductFilterDto } from 'src/dtos/product/product-filter.dto';
 import { ProductRepository } from './product.repository';
-import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import { ProductEntity } from './product.entity';
 import { CreateProductDto } from 'src/dtos/product/create-product.dto';
 import { UpdateProductDto } from 'src/dtos/product/update-product.dto';
 import { ItemCartDto } from 'src/dtos/order/item-cart.dto';
+import { PageOptionsDto } from 'src/pagination/dto/page-options.dto';
+import { constants } from 'src/const/main.const';
+import { PageDto } from 'src/pagination/dto/page.dto';
 
 @Injectable()
 export class ProductService {
@@ -17,9 +19,16 @@ export class ProductService {
 
   async get(
     productFilterDto: ProductFilterDto,
-    paginationOpts: IPaginationOptions,
-  ): Promise<Pagination<ProductEntity>> {
-    return this.productRepository.getProducts(productFilterDto, paginationOpts);
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<ProductEntity>> {
+    pageOptionsDto.page = !pageOptionsDto.page
+      ? constants.DEFAULT_PAGE_NUMBER
+      : pageOptionsDto.page;
+    pageOptionsDto.limit = !pageOptionsDto.limit
+      ? constants.DEFAULT_PAGES_ITEMS
+      : pageOptionsDto.limit;
+
+    return this.productRepository.getProducts(productFilterDto, pageOptionsDto);
   }
 
   async getProductById(id: string): Promise<ProductEntity> {
