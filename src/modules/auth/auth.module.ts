@@ -23,6 +23,7 @@ import { ResetPasswordRepository } from './reset-password/reset-password.reposit
 import { ResetPasswordService } from './reset-password/reset-password.service';
 import { ResetPasswordEntity } from './reset-password/reset-password.entity';
 import { MailModule } from 'src/providers/mail/mail.module';
+import { EmailExistRule } from 'src/validator/email-exist.validator';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { MailModule } from 'src/providers/mail/mail.module';
     RefreshTokenRepository,
     ResetPasswordService,
     ResetPasswordRepository,
+    EmailExistRule,
     // MailService,
   ],
   exports: [UserService, JwtStrategy],

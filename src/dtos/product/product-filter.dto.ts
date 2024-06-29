@@ -1,4 +1,5 @@
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class ProductFilterDto {
   @IsOptional()
@@ -18,4 +19,9 @@ export class ProductFilterDto {
   @IsOptional()
   @MaxLength(4)
   sort: any;
+
+  @IsInt()
+  @IsOptional()
+  @Type(() => Number)
+  limit?: number;
 }
