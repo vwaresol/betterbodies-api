@@ -6,11 +6,13 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { UserEmailExists } from 'src/decorators/email-user.decorator';
 
 export class SignupDto {
   @IsEmail()
   @MinLength(4)
   @MaxLength(100)
+  @UserEmailExists()
   username: string;
 
   @IsString()
