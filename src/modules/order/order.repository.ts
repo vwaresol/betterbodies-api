@@ -237,12 +237,7 @@ export class OrderRepository extends Repository<OrderEntity> {
   }
 
   async getAddress(id: string): Promise<AddressEntity> {
-    const address = await this.addressRepository.findOne({ where: { id } });
-
-    // if (!address) {
-    //   throw new NotFoundException(addressErrorsConst.ERROR_ADDRESS_NOT_FOUND);
-    // }
-
+    const address = await this.addressRepository.findOneBy({ id });
     return address;
   }
 

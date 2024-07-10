@@ -13,36 +13,37 @@ import { ItemCartDto } from './item-cart.dto';
 import { PaymentResultDto } from './payment-result.dto';
 
 export class SubmitOrderDto {
-  @IsOptional()
+  @IsDefined()
+  @IsNotEmpty()
   @IsString()
   addressId: string;
 
-  @IsOptional()
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   phoneId: string;
 
-  @IsOptional()
   @IsNotEmpty()
+  @IsDefined()
   @IsString()
   paymentMethodId: string;
 
-  @IsOptional()
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   referenceId: string;
 
-  @IsOptional()
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   cardNumber: string;
 
-  @IsOptional()
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   expiryDate: string;
 
-  @IsOptional()
+  @IsDefined()
   @IsNotEmpty()
   @IsString()
   cvc: string;
@@ -52,7 +53,6 @@ export class SubmitOrderDto {
   billingAddressId: string;
 
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
   status: string;
 
