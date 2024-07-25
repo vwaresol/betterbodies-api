@@ -99,7 +99,7 @@ export class OrderRepository extends Repository<OrderEntity> {
   }
 
   async getOrders(
-    { status, search, column, sort }: OrderFilterDto,
+    { status, search, payment, column, sort }: OrderFilterDto,
     paginationOpts: IPaginationOptions,
   ): Promise<Pagination<OrderEntity>> {
     const query = this.createQueryBuilder('order')
@@ -108,12 +108,14 @@ export class OrderRepository extends Repository<OrderEntity> {
       .leftJoinAndSelect('order.address', 'address')
       .leftJoinAndSelect('user.userProfile', 'userInfo')
       .leftJoinAndSelect('userInfo.phone', 'phone')
-      .where('order.paymentStatus = :status', {
-        status: paymentStatus.COMPLETED,
-      });
+      .leftJoinAndSelect('order.payments', 'payments');
 
     if (status) {
       query.andWhere('order.statusId = :status', { status });
+    }
+
+    if (payment) {
+      query.andWhere('order.paymentStatus = :payment', { payment });
     }
 
     if (search) {
