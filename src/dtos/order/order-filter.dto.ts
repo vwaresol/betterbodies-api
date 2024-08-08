@@ -9,6 +9,10 @@ export class OrderFilterDto {
   @IsString()
   search?: string;
 
+  @IsOptional()
+  @IsString()
+  payment?: string;
+
   @IsString()
   @IsOptional()
   @MaxLength(8)
